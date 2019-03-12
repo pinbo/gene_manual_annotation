@@ -1,0 +1,5 @@
+gene1	1314	C	T	-
+gene1	1270	C	T	-
+gene1	375	A	C	-
+gene1	375	A	C	-
+gene1	874	A	T	-

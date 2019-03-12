@@ -1,0 +1,4 @@
+gene1	CDS	2069	2134
+gene1	CDS	616	1229
+gene1	CDS	145	538
+gene1	CDS	1	57

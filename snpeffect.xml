@@ -1,0 +1,24 @@
+<tool id="Variant_effect" name="manually check SNP/indel effects">
+  <description>for checking SNP/indel effect in a gene</description>
+  <command interpreter="python">mysnpeffv2.py $gene $annotation $variant snpeffect</command>
+  
+  <inputs>
+    <param format="fasta" name="gene" type="data" label="sequence file (a fasta file)"/>
+    <param name="annotation" type="data" value="" label="Gene annotations (CDS positions)"/>
+    <param name="variant" type="data" label="SNP/indel positions and strand" help="Example: Gene_name	33	G	T	+"/>
+  </inputs>
+
+  <outputs>
+      <data format="tabular" name="output" from_work_dir="snpeffect" label="${tool.name}"/>
+  </outputs>
+
+  <help>
+
+**OVERVIEW**
+Predict SNP/indel effects manually for genes of interest.
+
+
+For more information go to : https://github.com/pinbo/gene_manual_annotation
+  </help>
+
+</tool>
