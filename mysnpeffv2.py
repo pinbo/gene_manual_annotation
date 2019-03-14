@@ -179,9 +179,9 @@ def get_var(infile):
 					vart[ll[0]] = []
 				vartemp.gene = ll[0]
 				vartemp.pos = int(ll[1]) - 1 # 0 based
-				strand = ll[4]
-				if strand == "+":
-					vartemp.ref, vartemp.alt, vartemp.strand = ll[2:5]
+				vartemp.strand = ll[4]
+				if ll[4] == "+":
+					vartemp.ref, vartemp.alt = ll[2:4]
 				else:
 					vartemp.ref = RC(ll[2])
 					vartemp.alt = RC(ll[3])
@@ -250,11 +250,11 @@ for kk in ff:
 					ref_AA = AA2[ref_codon] + "-" + AA3letter[AA2[ref_codon]]
 					alt_AA = AA2[alt_codon] + "-" + AA3letter[AA2[alt_codon]]
 					if ref_AA == alt_AA:
-						j.eff = "synonymous_variant " + ref_AA + str(ii/3 + 1) + alt_AA
+						j.eff = "synonymous_variant\t" + ref_AA + str(ii/3 + 1) + alt_AA
 					elif alt_AA == "-":
-						j.eff = "early_stop_condon " + ref_AA + str(ii/3 + 1) + alt_AA
+						j.eff = "early_stop_condon\t" + ref_AA + str(ii/3 + 1) + alt_AA
 					else:
-						j.eff = "missense_variant " + ref_AA + str(ii/3 + 1) + alt_AA
+						j.eff = "missense_variant\t" + ref_AA + str(ii/3 + 1) + alt_AA
 						j.B62 = B62table[B62header.index(ref_AA[0])][B62header.index(alt_AA[0])]
 				else:
 					j.eff = "UTR_variant"
@@ -325,11 +325,11 @@ for kk in ff:
 					ref_AA = AA2[ref_codon] + "-" + AA3letter[AA2[ref_codon]]
 					alt_AA = AA2[alt_codon] + "-" + AA3letter[AA2[alt_codon]]
 					if ref_AA == alt_AA:
-						j.eff = "synonymous_variant " + ref_AA + str(ii/3 + 1) + alt_AA
+						j.eff = "synonymous_variant\t" + ref_AA + str(ii/3 + 1) + alt_AA
 					elif alt_AA == "-":
-						j.eff = "early_stop_condon " + ref_AA + str(ii/3 + 1) + "*"
+						j.eff = "early_stop_condon\t" + ref_AA + str(ii/3 + 1) + "*"
 					else:
-						j.eff = "missense_variant " + ref_AA + str(ii/3 + 1) + alt_AA
+						j.eff = "missense_variant\t" + ref_AA + str(ii/3 + 1) + alt_AA
 						j.B62 = B62table[B62header.index(ref_AA[0])][B62header.index(alt_AA[0])]
 				else:
 					j.eff = "UTR_variant"
@@ -380,7 +380,7 @@ for kk in ff:
 					j.eff = "UTR_variant"
 
 	# write out the effect
-	out.write("Gene\tPosition\tRef_allele\tAlt_allele\tEffect\tBLOSUM62_score\n")
+	out.write("Gene\tPosition\tRef_allele\tAlt_allele\tEffect\tAA_change\tBLOSUM62_score\n")
 	for k in vv:
 		out.write("\t".join([k.gene, str(k.pos + 1), k.ref, k.alt, k.eff, str(k.B62)]) + "\n")
 
