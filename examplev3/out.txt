@@ -1,0 +1,41 @@
+Gene	Position	Strand	Ref_allele	Alt_allele	Effect	AA_change	BLOSUM62_score
+TraesCS4B02G280700.1	563627247	-	A	G	UTR_variant	
+TraesCS4B02G280700.1	563627887	-	T	G	synonymous_variant	R-Arg383R-Arg	
+TraesCS4B02G280700.1	563627940	-	C	T	splice_site_mutant	
+TraesCS4B02G280700.1	563627941	-	T	C	splice_site_mutant	
+TraesCS4B02G280700.1	563628020	-	A	G	splice_site_mutant	
+TraesCS4B02G280700.1	563628021	-	C	T	splice_site_mutant	
+TraesCS4B02G280700.1	563628520	-	C	T	missense_variant	G-Gly199D-Asp	-1
+TraesCS4B02G280700.1	563629065	-	G	A	synonymous_variant	G-Gly17G-Gly	
+TraesCS4B02G280700.1	563629161	-	T	C	UTR_variant	
+TraesCS4B02G280700.1	563629578	-	A	G	UTR_variant	
+TraesCS4B02G280700.1	563630104	-	G	T	UTR_variant	
+TraesCS4B02G280800.1	563785338	+	C	G	UTR_variant	
+TraesCS4B02G280800.1	563785649	+	G	A	splice_site_mutant	
+TraesCS4B02G280800.1	563785650	+	T	C	splice_site_mutant	
+TraesCS4B02G280800.1	563785660	+	T	C	intron_variant	
+TraesCS4B02G280800.1	563785757	+	A	G	splice_site_mutant	
+TraesCS4B02G280800.1	563785757	+	G	A	splice_site_mutant	
+TraesCS4B02G280800.1	563786088	+	A	G	intron_variant	
+TraesCS4B02G280800.1	563786382	+	A	G	synonymous_variant	K-Lys72K-Lys	
+TraesCS4B02G280800.1	563786588	+	G	C	UTR_variant	
+TraesCS4B02G280900.1	563800006	-	C	T	UTR_variant	
+intergene	564143682	+	T	C	InterGene	
+TraesCS4B02G281100.1	564151349	+	A	G	missense_variant	K-Lys34R-Arg	2
+TraesCS4B02G281200.1	564223223	-	A	C	missense_variant	L-Leu189W-Trp	-2
+TraesCS4B02G281200.1	564223839	-	G	T	UTR_variant	
+TraesCS4B02G281400.1	564388305	-	A	T	synonymous_variant	G-Gly1255G-Gly	
+TraesCS4B02G281400.1	564393308	-	G	A	synonymous_variant	H-His807H-His	
+TraesCS4B02G281400.1	564393463	-	G	A	missense_variant	R-Arg756C-Cys	-3
+TraesCS4B02G281400.1	564394040	-	A	T	synonymous_variant	S-Ser563S-Ser	
+TraesCS4B02G281400.1	564394207	-	G	T	missense_variant	H-His508N-Asn	1
+TraesCS4B02G281400.1	564394563	-	G	A	missense_variant	A-Ala389V-Val	-2
+TraesCS4B02G281500.1	564653059	-	A	C	missense_variant	F-Phe152C-Cys	-2
+TraesCS4B02G281500.1	564653330	-	C	A	missense_variant	G-Gly62W-Trp	-2
+TraesCS4B02G281600.1	564785508	-	A	T	missense_variant	V-Val199E-Glu	-2
+TraesCS4B02G281600.1	564785885	-	G	A	synonymous_variant	A-Ala73A-Ala	
+TraesCS4B02G281600.1	564786009	-	A	G	missense_variant	V-Val32A-Ala	0
+TraesCS4B02G281900.1	564901638	-	C	T	UTR_variant	
+TraesCS4B02G281900.1	564902523	-	C	T	missense_variant	R-Arg272Q-Gln	1
+TraesCS4B02G281900.1	564902525	-	T	C	synonymous_variant	G-Gly271G-Gly	
+TraesCS4B02G281900.1	564905084	-	G	T	synonymous_variant	I-Ile24I-Ile	
