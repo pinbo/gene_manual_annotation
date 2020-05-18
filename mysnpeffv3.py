@@ -221,8 +221,8 @@ outfile = sys.argv[4] # output file name
 seq_start = int(sys.argv[5]) # an integar of the star position of sequences in seq_file, for example 563784341
 
 allseq = get_fasta(seq_file)
-print "sequence was parsed"
-refseq = allseq[allseq.keys()[0]]
+print("sequence was parsed")
+refseq = allseq[list(allseq.keys())[0]]
 print(refseq[0:10])
 
 #ee_all = get_annotation(ann_file)
@@ -302,11 +302,11 @@ for j in snplist:
 			ref_AA = AA2[ref_codon] + "-" + AA3letter[AA2[ref_codon]]
 			alt_AA = AA2[alt_codon] + "-" + AA3letter[AA2[alt_codon]]
 			if ref_AA == alt_AA:
-				j.eff = "synonymous_variant\t" + ref_AA + str(ii/3 + 1) + alt_AA
+				j.eff = "synonymous_variant\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
 			elif alt_AA == "-":
-				j.eff = "early_stop_condon\t" + ref_AA + str(ii/3 + 1) + alt_AA
+				j.eff = "early_stop_condon\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
 			else:
-				j.eff = "missense_variant\t" + ref_AA + str(ii/3 + 1) + alt_AA
+				j.eff = "missense_variant\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
 				j.B62 = B62table[B62header.index(ref_AA[0])][B62header.index(alt_AA[0])]
 		else:
 			j.eff = "UTR_variant"
