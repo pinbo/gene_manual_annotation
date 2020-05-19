@@ -90,11 +90,15 @@ def main(args):
 		snpsubset = snpfile + ".subset.txt"
 		output = "out." + rr.chr + ".txt"
 		# awk '$1=="4B"{$5 >= 1 && $4 <= 10}' input > output
-		cmd1 = "gawk '$1==\"" + rr.chr + "\" && ($5>=" + str(rr.min) + " && $4 <= " + str(rr.max) + ") || ($4>=" + str(rr.min) + " && $5 <= " + str(rr.max) + ")' " + gff3file + " > " + gff3subset
+		cmd1 = "gawk 'BEGIN{mm = " + str(rr.max) + "} $1==\"" + rr.chr + "\" && $5>=" + str(rr.min) + " && $4<=" + str(rr.max) + "{print; if ($5>mm) mm=$5}' " + gff3file + " > " + gff3subset
 		print(cmd1)
 		call(cmd1, shell=True)
 		# update rr.min and rr.max from the gff3 subset file
-		rr.min, rr.max = getgff3range(gff3subset)
+		newmin, newmax = getgff3range(gff3subset)
+		if newmin < rr.min:
+			rr.min = newmin
+		if newmax > rr.max:
+			rr.max = newmax
 		cmd2 = "blastdbcmd" + " -db '" + reference + "' -entry " + rr.chr + " -range " + str(rr.min) + "-" + str(rr.max) + " > " + chrsubset
 		print(cmd2)
 		call(cmd2, shell=True)
