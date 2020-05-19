@@ -90,7 +90,7 @@ def main(args):
 		snpsubset = snpfile + ".subset.txt"
 		output = "out." + rr.chr + ".txt"
 		# awk '$1=="4B"{$5 >= 1 && $4 <= 10}' input > output
-		cmd1 = "gawk '$1==\"" + rr.chr + "\" && $5>=" + str(rr.min) + " && $4 <= " + str(rr.max) + "' " + gff3file + " > " + gff3subset
+		cmd1 = "gawk '$1==\"" + rr.chr + "\" && ($5>=" + str(rr.min) + " && $4 <= " + str(rr.max) + ") || ($4>=" + str(rr.min) + " && $5 <= " + str(rr.max) + ")' " + gff3file + " > " + gff3subset
 		print(cmd1)
 		call(cmd1, shell=True)
 		# update rr.min and rr.max from the gff3 subset file
