@@ -173,7 +173,7 @@ def parse_gff3(infile):
 					for ii in tt:
 						key, val = ii.split("=")
 						tempdict[key] = val
-					mRNA_name = tempdict["Name"]
+					mRNA_name = tempdict["ID"]
 					genelist.append(mRNA_name)
 					mm.gene = mRNA_name
 					ann[mRNA_name] = []
