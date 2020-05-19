@@ -87,6 +87,7 @@ def main(args):
 	for rr in regionlist:
 		gff3subset = rr.chr + ".subset.gff3"
 		chrsubset = rr.chr + ".subset.fasta"
+		snpsubset = "subset_" + snpfile
 		output = "out." + rr.chr + ".txt"
 		# awk '$1=="4B"{$5 >= 1 && $4 <= 10}' input > output
 		cmd1 = "gawk '$1==\"" + rr.chr + "\" && $5>=" + str(rr.min) + " && $4 <= " + str(rr.max) + "' " + gff3file + " > " + gff3subset
@@ -97,10 +98,14 @@ def main(args):
 		cmd2 = "blastdbcmd" + " -db '" + reference + "' -entry " + rr.chr + " -range " + str(rr.min) + "-" + str(rr.max) + " > " + chrsubset
 		print(cmd2)
 		call(cmd2, shell=True)
-		# run mysnpeffv3
-		cmd3 = script_path + "/mysnpeffv3.py " + chrsubset + " " + gff3subset + " " + snpfile + " " + output + " " + str(rr.min)
+		# subset SNP input file
+		cmd3 = "gawk '$1==\"" + rr.chr + "\"' " + snpfile + " > " + snpsubset
 		print(cmd3)
 		call(cmd3, shell=True)
+		# run mysnpeffv3
+		cmd4 = script_path + "/mysnpeffv3.py " + chrsubset + " " + gff3subset + " " + snpsubset + " " + output + " " + str(rr.min)
+		print(cmd4)
+		call(cmd4, shell=True)
 	
 	# merge all the results
 	cmd4 = "cat out.*.txt > all.out.txt"
