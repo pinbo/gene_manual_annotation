@@ -51,12 +51,13 @@ def get_region(infile):
 					posdict[chr].append(pos)
 				else:
 					posdict[chr] = [pos]
-		for k, v in posdict.items():
-			rr = region()
-			rr.chr = k
-			rr.min = min(v)
-			rr.max = max(v)
-			regionlist.append(rr)
+	# put chrom, start, end into a list.
+	for k, v in posdict.items():
+		rr = region()
+		rr.chr = k
+		rr.min = min(v)
+		rr.max = max(v)
+		regionlist.append(rr)
 	return regionlist
 
 # get min and max from the gff3 subset
