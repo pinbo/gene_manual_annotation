@@ -87,7 +87,7 @@ def main(args):
 	for rr in regionlist:
 		gff3subset = rr.chr + ".subset.gff3"
 		chrsubset = rr.chr + ".subset.fasta"
-		snpsubset = "subset_" + snpfile
+		snpsubset = snpfile + ".subset.txt"
 		output = "out." + rr.chr + ".txt"
 		# awk '$1=="4B"{$5 >= 1 && $4 <= 10}' input > output
 		cmd1 = "gawk '$1==\"" + rr.chr + "\" && $5>=" + str(rr.min) + " && $4 <= " + str(rr.max) + "' " + gff3file + " > " + gff3subset
