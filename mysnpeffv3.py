@@ -280,7 +280,9 @@ for j in snplist:
 		splice = mRNA.splice
 		exome = mRNA.exome
 		alt = j.alt # alternative allele
-		if j.strand == "-":
+		B62 = ""
+		eff = ""
+		if j.strand[i] == "-":
 			#ref = RC(j.ref)
 			alt = RC(j.alt)
 		if len(j.ref) == 1 and len(j.alt) == 1: # snps
@@ -309,7 +311,7 @@ for j in snplist:
 					eff = "early_stop_condon\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
 				else:
 					eff = "missense_variant\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
-					j.B62.append(B62table[B62header.index(ref_AA[0])][B62header.index(alt_AA[0])])
+					B62 = B62table[B62header.index(ref_AA[0])][B62header.index(alt_AA[0])]
 			else:
 				eff = "UTR_variant"
 		## if it is an insertion. I suppose the first letter of the ref and alt are the same
@@ -360,7 +362,7 @@ for j in snplist:
 		# assign eff to j.eff
 		j.eff.append(eff)
 		# write out the effect
-		out.write("\t".join([j.gene[i], str(j.pos), j.strand, j.ref, j.alt, j.eff[i], str(j.B62[i])]) + "\n")
+		out.write("\t".join([j.gene[i], str(j.pos), j.strand[i], j.ref, j.alt, eff, str(B62)]) + "\n")
 
 # get the cDNA
 """ gene = vv[0].gene
