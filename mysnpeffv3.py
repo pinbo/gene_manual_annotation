@@ -358,7 +358,7 @@ for j in snplist:
 			else:
 				eff = "UTR_variant"
 		# assign eff to j.eff
-		j.eff[i] = eff
+		j.eff.append(eff)
 		# write out the effect
 		out.write("\t".join([j.gene[i], str(j.pos), j.strand, j.ref, j.alt, j.eff[i], str(j.B62[i])]) + "\n")
 
