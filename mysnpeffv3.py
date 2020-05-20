@@ -186,17 +186,17 @@ def parse_gff3(infile):
 					ann[mRNA_name].append(anntemp)
 	return ann, genes, genelist # CDS and mRNAs
 
-# variant object
+# variant object: snps and indels
 class var(object):
 	"""Information of variants"""
 	def __init__(self):
-		self.gene = "intergene" # the gene it is located
+		self.gene = ["intergene"] # a list, the mRNAs it is located
 		self.pos = 0
 		self.ref = "" 
 		self.alt = ""
-		self.strand = "+"
-		self.eff = ""
-		self.B62 = "" # blosum62 score
+		self.strand = ["+"]
+		self.eff = ["intergene"]
+		self.B62 = [""] # blosum62 score
 
 # get the variation file
 # return a list of variant object
@@ -241,11 +241,11 @@ for snp in snplist:
 		#print "Gene is", gene, snp.pos
 		#print "Gene positions", genes[gene].start, genes[gene].end
 		if snp.pos >= genes[gene].start and snp.pos <= genes[gene].end:
-			snp.gene = gene
-			snp.strand = genes[gene].strand
-			break
+			snp.gene.append(gene)
+			snp.strand.append(genes[gene].strand)
+			#break
 
-# sort exons for each gene
+# sort exons for each mRNA splice
 for kk in ee_all:
 	ee = ee_all[kk] # exons
 	gene = genes[kk] # mRNA
@@ -266,97 +266,101 @@ out = open(outfile, "w")
 out.write("Gene\tPosition\tStrand\tRef_allele\tAlt_allele\tEffect\tAA_change\tBLOSUM62_score\n")
 
 for j in snplist:
-	geneID = j.gene
-	if geneID == "intergene":
+	nn = len(j.gene) # number of mRNAs
+	if nn == 1: # only default "intergene"
 		j.eff = "InterGene"
-		out.write("\t".join([j.gene, str(j.pos), j.strand, j.ref, j.alt, j.eff, str(j.B62)]) + "\n")
+		out.write("\t".join([j.gene[0], str(j.pos), j.strand[0], j.ref, j.alt, j.eff[0], str(j.B62[0])]) + "\n")
 		continue
-	mRNA = genes[geneID]
-	seq = mRNA.seq
-	ee = ee_all[j.gene] # annotation, exon positions
-	intron = mRNA.intron
-	splice = mRNA.splice
-	exome = mRNA.exome
-	alt = j.alt # alternative allele
-	if j.strand == "-":
-		#ref = RC(j.ref)
-		alt = RC(j.alt)
-	if len(j.ref) == 1 and len(j.alt) == 1: # snps
-		if j.pos in intron:
-			j.eff = "intron_variant"
-		elif j.pos in splice:
-			j.eff = "splice_site_mutant"
-		elif j.pos in exome: # in exon
-			ii = exome.index(j.pos) # position in the cDNA
-			relative_pos = abs(j.pos - mRNA.start) # position in the mRNA
-			if ii%3 == 0:
-				ref_codon = seq[relative_pos:(relative_pos+3)]
-				alt_codon = alt + ref_codon[1:]
-			elif ii%3 == 1:
-				ref_codon = seq[(relative_pos - 1):(relative_pos+3-1)]
-				alt_codon = ref_codon[0] + alt + ref_codon[2]
-			else:
-				ref_codon = seq[(relative_pos-2):(relative_pos+3-2)]
-				alt_codon = ref_codon[0:2] + alt
-			# check AA change
-			ref_AA = AA2[ref_codon] + "-" + AA3letter[AA2[ref_codon]]
-			alt_AA = AA2[alt_codon] + "-" + AA3letter[AA2[alt_codon]]
-			if ref_AA == alt_AA:
-				j.eff = "synonymous_variant\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
-			elif alt_AA == "-":
-				j.eff = "early_stop_condon\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
-			else:
-				j.eff = "missense_variant\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
-				j.B62 = B62table[B62header.index(ref_AA[0])][B62header.index(alt_AA[0])]
-		else:
-			j.eff = "UTR_variant"
-	## if it is an insertion. I suppose the first letter of the ref and alt are the same
-	elif len(j.ref) == 1 and len(j.alt) > 1:
-		if j.pos in intron:
-			j.eff = "intron_variant"
-		elif j.pos in splice:
-			if j.pos - 1 in exome: # first letter in the left splice site
-				if alt[0:2] == "GT":
-					j.eff = "intron_variant_near_splice_site"
+	for i in range(1, nn):
+		ID = j.gene[i] # mRNA ID
+		mRNA = genes[ID]
+		seq = mRNA.seq
+		ee = ee_all[ID] # annotation, exon positions
+		intron = mRNA.intron
+		splice = mRNA.splice
+		exome = mRNA.exome
+		alt = j.alt # alternative allele
+		if j.strand == "-":
+			#ref = RC(j.ref)
+			alt = RC(j.alt)
+		if len(j.ref) == 1 and len(j.alt) == 1: # snps
+			if j.pos in intron:
+				eff = "intron_variant"
+			elif j.pos in splice:
+				eff = "splice_site_mutant"
+			elif j.pos in exome: # in exon
+				ii = exome.index(j.pos) # position in the cDNA
+				relative_pos = abs(j.pos - mRNA.start) # position in the mRNA
+				if ii%3 == 0:
+					ref_codon = seq[relative_pos:(relative_pos+3)]
+					alt_codon = alt + ref_codon[1:]
+				elif ii%3 == 1:
+					ref_codon = seq[(relative_pos - 1):(relative_pos+3-1)]
+					alt_codon = ref_codon[0] + alt + ref_codon[2]
 				else:
-					j.eff = "splice_donor_mutant"
-			elif j.pos + 1 in intron: # 2nd letter in the left splice site
-				j.eff = "intron_variant_near_splice_site"
-			elif j.pos - 1 in intron: # 1st letter in the right splice site
-				if alt[0:2] == "AG":
-					if (len(j.alt) - 1)%3 == 0:
-						j.eff = "inframe_insertion_near_splice"
+					ref_codon = seq[(relative_pos-2):(relative_pos+3-2)]
+					alt_codon = ref_codon[0:2] + alt
+				# check AA change
+				ref_AA = AA2[ref_codon] + "-" + AA3letter[AA2[ref_codon]]
+				alt_AA = AA2[alt_codon] + "-" + AA3letter[AA2[alt_codon]]
+				if ref_AA == alt_AA:
+					eff = "synonymous_variant\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
+				elif alt_AA == "-":
+					eff = "early_stop_condon\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
+				else:
+					eff = "missense_variant\t" + ref_AA + str(int(ii/3) + 1) + alt_AA
+					j.B62.append(B62table[B62header.index(ref_AA[0])][B62header.index(alt_AA[0])])
+			else:
+				eff = "UTR_variant"
+		## if it is an insertion. I suppose the first letter of the ref and alt are the same
+		elif len(j.ref) == 1 and len(j.alt) > 1:
+			if j.pos in intron:
+				eff = "intron_variant"
+			elif j.pos in splice:
+				if j.pos - 1 in exome: # first letter in the left splice site
+					if alt[0:2] == "GT":
+						eff = "intron_variant_near_splice_site"
 					else:
-						j.eff = "frame_shift_near_splice"
+						eff = "splice_donor_mutant"
+				elif j.pos + 1 in intron: # 2nd letter in the left splice site
+					eff = "intron_variant_near_splice_site"
+				elif j.pos - 1 in intron: # 1st letter in the right splice site
+					if alt[0:2] == "AG":
+						if (len(j.alt) - 1)%3 == 0:
+							eff = "inframe_insertion_near_splice"
+						else:
+							eff = "frame_shift_near_splice"
+					else:
+						eff = "splice_acceptor_mutant"
+				elif j.pos + 1 in exome: # 2nd letter in the right splice site
+					if (len(j.alt) - 1)%3 == 0:
+						eff = "inframe_insertion_near_splice"
+					else:
+						eff = "frame_shift_near_splice"
+			elif j.pos in exome:# in exon
+				if (len(j.alt) - 1)%3 == 0: # in frame
+					eff = "amino_acid_insertion"
 				else:
-					j.eff = "splice_acceptor_mutant"
-			elif j.pos + 1 in exome: # 2nd letter in the right splice site
-				if (len(j.alt) - 1)%3 == 0:
-					j.eff = "inframe_insertion_near_splice"
+					eff = "frame_shift"
+			else:
+				eff = "UTR_variant"
+		## if it is a deletion
+		else:
+			if set(range(j.pos, j.pos + len(j.ref))) <= set(intron): # if only in intron
+				eff = "intron_variant"
+			elif set(range(j.pos, j.pos + len(j.ref))) <= set(exome): # if only in exome
+				if (len(j.ref) - 1)%3 == 0: # in frame
+					eff = "amino_acid_deletion"
 				else:
-					j.eff = "frame_shift_near_splice"
-		elif j.pos in exome:# in exon
-			if (len(j.alt) - 1)%3 == 0: # in frame
-				j.eff = "amino_acid_insertion"
+					eff = "frame_shift"
+			elif set(range(j.pos, j.pos + len(j.ref))) & set(splice): # affecting splice
+				eff = "splice_site_mutant"
 			else:
-				j.eff = "frame_shift"
-		else:
-			j.eff = "UTR_variant"
-	## if it is a deletion
-	else:
-		if set(range(j.pos, j.pos + len(j.ref))) <= set(intron): # if only in intron
-			j.eff = "intron_variant"
-		elif set(range(j.pos, j.pos + len(j.ref))) <= set(exome): # if only in exome
-			if (len(j.ref) - 1)%3 == 0: # in frame
-				j.eff = "amino_acid_deletion"
-			else:
-				j.eff = "frame_shift"
-		elif set(range(j.pos, j.pos + len(j.ref))) & set(splice): # affecting splice
-			j.eff = "splice_site_mutant"
-		else:
-			j.eff = "UTR_variant"
-	# write out the effect
-	out.write("\t".join([j.gene, str(j.pos), j.strand, j.ref, j.alt, j.eff, str(j.B62)]) + "\n")
+				eff = "UTR_variant"
+		# assign eff to j.eff
+		j.eff[i] = eff
+		# write out the effect
+		out.write("\t".join([j.gene[i], str(j.pos), j.strand, j.ref, j.alt, j.eff[i], str(j.B62[i])]) + "\n")
 
 # get the cDNA
 """ gene = vv[0].gene
