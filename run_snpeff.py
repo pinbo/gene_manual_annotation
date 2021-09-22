@@ -48,9 +48,9 @@ def get_region(infile):
 				ll = line.split() # white space
 				chr, pos = ll[0:2]
 				if chr in posdict:
-					posdict[chr].append(pos)
+					posdict[chr].append(int(pos))
 				else:
-					posdict[chr] = [pos]
+					posdict[chr] = [int(pos)]
 	# put chrom, start, end into a list.
 	for k, v in posdict.items():
 		rr = region()
