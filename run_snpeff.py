@@ -71,8 +71,8 @@ def getgff3range(gff3file): # suppose only for one chromsome
 			line = line.strip()
 			if line:
 				ll = line.split()
-				col4.append(ll[3])
-				col5.append(ll[4])
+				col4.append(int(ll[3]))
+				col5.append(int(ll[4]))
 	return min(col4), max(col5)
 
 def main(args):
