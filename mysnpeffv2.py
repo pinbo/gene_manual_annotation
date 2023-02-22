@@ -391,7 +391,7 @@ for kk in ff:
 
 	n = len(cdna)/3 # number of amino acid
 	protein = ""
-	for i in range(n):
+	for i in range(int(n)):
 		codon = cdna[(i*3):(i*3+3)]
 		aa = AA2[codon]
 		protein += aa
