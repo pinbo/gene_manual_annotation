@@ -124,8 +124,8 @@ def get_fasta(infile):
 
 # get reverse complement sequence
 def RC(seq):
-	s1 = "BDHKMNRSVWYATGCbdhkmnrsvwyatgc"
-	s2 = "VHDMKNYSBWRTACGvhdmknysbwrtacg"
+	s1 = "BDHKMNRSVWYATGCbdhkmnrsvwyatgc-"
+	s2 = "VHDMKNYSBWRTACGvhdmknysbwrtacg-"
 	seq_dict = {s1[i]:s2[i] for i in range(len(s1))}
 	return "".join([seq_dict[base] for base in reversed(seq)])
 
