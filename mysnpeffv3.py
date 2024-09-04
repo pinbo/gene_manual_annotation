@@ -228,7 +228,7 @@ print(refseq[0:10])
 #ee_all = get_annotation(ann_file)
 ee_all, genes, genelist = parse_gff3(gff3_file) # CDSs and mRNAs
 snplist = get_var(var_file) # SNPs and indels
-# get mRNA sequences
+# get mRNA sequences (before splicing, so still has introns)
 for v in genes.values():
 	v.seq = refseq[(v.start - seq_start):(v.end - seq_start + 1)]
 	if v.strand == "-":
@@ -364,16 +364,20 @@ for j in snplist:
 		# write out the effect
 		out.write("\t".join([j.gene[i], str(j.pos), j.strand[i], j.ref, j.alt, eff, str(B62)]) + "\n")
 
-# get the cDNA
-""" gene = vv[0].gene
-cdna = "".join([ff[gene][i] for i in exome])
-out.write("\n>" + gene + "_cDNA\n" + cdna + "\n\n")
-
-n = len(cdna)/3 # number of amino acid
-protein = ""
-for i in range(n):
-	codon = cdna[(i*3):(i*3+3)]
-	aa = AA2[codon]
-	protein += aa
-out.write(">" + gene + "_protein\n" + protein + "\n\n") """
-
+# write cDNA
+for v in genes.values():
+	gene = v.gene
+	seq = v.seq
+	exome = v.exome # positions on the chromosome, minus v.start to get the relative position
+	# print(len(exome))
+	# print(v.start)
+	cdna = "".join([seq[abs(i - v.start)] for i in exome])
+	out.write("\n>" + gene + "_cDNA\n" + cdna + "\n\n")
+	print("length of protein is ", len(cdna)/3)
+	n = int(len(cdna)/3) # number of amino acid
+	protein = ""
+	for i in range(n):
+		codon = cdna[(i*3):(i*3+3)]
+		aa = AA2[codon]
+		protein += aa
+	out.write(">" + gene + "_protein\n" + protein + "\n\n")
